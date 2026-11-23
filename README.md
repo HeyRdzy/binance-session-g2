@@ -8,6 +8,10 @@ One screen at a time, big numbers, minimal text — the way the G2 wants it. No 
 no transfers, no real funds: prices come from the Binance **public** API, and the
 portfolio is a clearly-labeled **paper (demo)** portfolio.
 
+## Demo video
+
+**[▶ Watch the 2-minute demo (MP4)](https://github.com/HeyRdzy/binance-session-g2/releases/download/v0.1.0/binance-session-demo.mp4)** — recorded from the browser lens simulation: all five screens with live Binance prices, tap/swipe navigation, and voice commands ("Bitcoin price", "alert BTC above 62000"). No G2 hardware was available, so the video shows the exact 576×288 green canvas the glasses would display, not footage of the lenses.
+
 ## What it does
 
 Five screens, navigated by temple tap / swipe (or buttons + voice in the browser demo):
