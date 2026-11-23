@@ -42,11 +42,19 @@ const bridge = await withTimeout(
 if (!bridge) {
   // No Even Hub bridge — run the browser demo (same screens, same data).
   await import('./demo')
-} else {
-  await runGlasses(bridge)
+} else if (!(await runGlasses(bridge))) {
+  // The SDK singleton reports itself "ready" in ANY browser (its
+  // _ready flag is set at construction), so a plain browser reaches
+  // glasses mode — but createStartUpPageContainer then fails because
+  // there is no Flutter handler to talk to. That failure means "not
+  // really on glasses": fall back to the browser demo instead of
+  // leaving the lens stuck on "Starting…". On real G2 hardware (and
+  // in the official simulator) the container is created fine, so
+  // glasses mode is unaffected.
+  await import('./demo')
 }
 
-async function runGlasses(bridge: EvenAppBridge): Promise<void> {
+async function runGlasses(bridge: EvenAppBridge): Promise<boolean> {
   const session = createSession()
   const { state } = session
   let lastContent = ''
@@ -85,7 +93,7 @@ async function runGlasses(bridge: EvenAppBridge): Promise<void> {
   )
   if (result !== 0) {
     console.error('createStartUpPageContainer failed:', result)
-    return
+    return false
   }
   lastContent = initial
 
@@ -187,4 +195,6 @@ async function runGlasses(bridge: EvenAppBridge): Promise<void> {
   setInterval(() => {
     if (state.listening && state.screen === 'voice') void push()
   }, 2000)
+
+  return true
 }
