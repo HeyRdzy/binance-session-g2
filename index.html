@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binance Session — Even G2 Glasses App</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        background: #101010;
+        color: #e5e5e5;
+        font: 15px/1.5 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      }
+      body { padding: 24px 16px 48px; }
+      h1 { font-size: 20px; margin: 0 0 4px; }
+      .sub { color: #9a9a9a; margin: 0 0 20px; }
+      .wrap { max-width: 960px; margin: 0 auto; }
+      /* --- lens mockup: the 576x288 green G2 canvas, scaled 1.5x --- */
+      .lens-stage {
+        width: 864px; height: 432px; max-width: 100%;
+        margin: 0 auto 16px; overflow: hidden;
+        border: 10px solid #2b2b2b; border-radius: 28px;
+        background: #000; position: relative;
+      }
+      .lens-stage::after {
+        content: "EVEN G2 · 576 × 288 · monochrome green";
+        position: absolute; right: 12px; bottom: 8px;
+        font-size: 11px; letter-spacing: 1px; color: #1d5c2e;
+      }
+      #lens {
+        width: 576px; height: 288px; margin: 0;
+        transform: scale(1.5); transform-origin: top left;
+        background: #001505; color: #4dff88;
+        font: 20px/27px "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+        white-space: pre; padding: 8px 12px;
+        text-shadow: 0 0 6px rgba(77, 255, 136, 0.55);
+      }
+      #status { text-align: center; color: #9a9a9a; font-size: 13px; margin: 0 0 16px; }
+      .controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+      button {
+        background: #232323; color: #e5e5e5; border: 1px solid #3d3d3d;
+        border-radius: 8px; padding: 10px 16px; font-size: 14px; cursor: pointer;
+      }
+      button:hover { background: #2f2f2f; }
+      button.active { background: #14532d; border-color: #22c55e; }
+      .voice-row { display: flex; gap: 8px; max-width: 560px; margin: 0 auto 16px; }
+      .voice-row input {
+        flex: 1; background: #1b1b1b; color: #e5e5e5;
+        border: 1px solid #3d3d3d; border-radius: 8px; padding: 10px 12px; font-size: 14px;
+      }
+      #log {
+        max-width: 560px; margin: 0 auto; background: #161616;
+        border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 12px;
+        font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #bdbdbd;
+        min-height: 100px;
+      }
+      #log div { border-bottom: 1px solid #222; padding: 2px 0; }
+      #log div:last-child { border-bottom: 0; }
+      #companion { text-align: center; padding: 80px 24px; }
+      #exit-overlay {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+        align-items: center; justify-content: center; z-index: 10;
+      }
+      #exit-overlay .card {
+        background: #1d1d1d; border: 1px solid #3d3d3d; border-radius: 12px;
+        padding: 24px; text-align: center; max-width: 320px;
+      }
+      #closed { display: none; text-align: center; padding: 80px 24px; }
+      .note { max-width: 560px; margin: 24px auto 0; color: #8a8a8a; font-size: 13px; }
+      .note b { color: #c9c9c9; }
+      @media (max-width: 900px) {
+        .lens-stage { transform: scale(0.62); transform-origin: top left; height: 268px; margin-bottom: -140px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div id="companion">
+        <h1>Binance Session</h1>
+        <p class="sub">Companion app is running. Check the glasses display.</p>
+      </div>
+
+      <div id="demo" style="display: none">
+        <h1>Binance Session — Even G2 demo</h1>
+        <p class="sub">Trading session for Even G2 smart glasses · read-only · paper portfolio · live Binance public data</p>
+        <div class="lens-stage"><pre id="lens">Starting…</pre></div>
+        <p id="status">Loading…</p>
+        <div class="controls">
+          <button id="btn-tap">Tap (next)</button>
+          <button id="btn-up">Swipe ↑</button>
+          <button id="btn-down">Swipe ↓</button>
+          <button id="btn-mic">🎤 Listen (voice)</button>
+          <button id="btn-dbltap">Double-tap (exit)</button>
+        </div>
+        <div class="voice-row">
+          <input id="voice-input" type="text" placeholder='Type a voice command, e.g. "Bitcoin price" or "alert BTC above 62000"' />
+          <button id="btn-send">Send</button>
+        </div>
+        <div id="log"></div>
+        <p class="note">
+          <b>Demo mode:</b> no Even Hub bridge was found, so this page simulates the
+          576×288 green lens in the browser. Voice uses the Web Speech API
+          (microphone + phone speaker). On real G2 glasses the same screens render
+          through the Even Hub SDK, taps/swipes come from the temple touchpads,
+          and mic audio flows through <code>bridge.audioControl</code> to a
+          speech-to-text provider (see <code>src/stt.ts</code>).<br /><br />
+          <b>Read-only:</b> prices come from the Binance public API — no API key,
+          no orders, no real funds. The portfolio is a paper (demo) portfolio.
+        </p>
+      </div>
+
+      <div id="exit-overlay">
+        <div class="card">
+          <h2 style="margin: 0 0 8px">Exit Binance Session?</h2>
+          <p class="sub">Double-tap confirms exit on the glasses.</p>
+          <button id="btn-exit-confirm">Exit app</button>
+          <button id="btn-exit-cancel">Stay</button>
+        </div>
+      </div>
+
+      <div id="closed">
+        <h1>Binance Session closed</h1>
+        <p class="sub">The app exited. Restart to run the demo again.</p>
+        <button id="btn-restart">Restart demo</button>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
