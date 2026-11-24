@@ -160,6 +160,13 @@ export function createSession(): Session {
         void refresh()
         return 'Refreshing prices.'
       case 'alert': {
+        const existing = state.alerts.find(
+          (a) => a.symbol === cmd.symbol && a.direction === cmd.direction && a.price === cmd.price,
+        )
+        if (existing) {
+          show('alerts')
+          return `Alert already set: ${shortOf(cmd.symbol)} ${cmd.direction} ${fmtPrice(cmd.price)}.`
+        }
         const alert: Alert = {
           id: `a${Date.now()}`,
           symbol: cmd.symbol,

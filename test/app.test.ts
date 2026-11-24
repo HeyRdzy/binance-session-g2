@@ -88,6 +88,9 @@ check('session: voice switches to detail', session.state.screen === 'detail')
 check('session: reply mentions Bitcoin', reply.includes('Bitcoin'), reply)
 const alertReply = session.handleVoice('alert bnb above 700')
 check('session: voice adds alert', session.state.alerts.some((a) => a.symbol === 'BNBUSDT' && a.price === 700), alertReply)
+const dupReply = session.handleVoice('alert bnb above 700')
+check('session: duplicate alert not added', session.state.alerts.filter((a) => a.symbol === 'BNBUSDT' && a.price === 700).length === 1, session.state.alerts.length)
+check('session: duplicate alert reply says already set', dupReply.toLowerCase().includes('already'), dupReply)
 
 // --- live Binance data ---
 console.log('--- live Binance (data-api.binance.vision) ---')
