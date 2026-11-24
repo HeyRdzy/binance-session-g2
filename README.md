@@ -10,7 +10,9 @@ portfolio is a clearly-labeled **paper (demo)** portfolio.
 
 ## Demo video
 
-**[▶ Watch the 2-minute demo (MP4)](https://github.com/HeyRdzy/binance-session-g2/releases/download/v0.1.0/binance-session-demo.mp4)** — recorded from the browser lens simulation: all five screens with live Binance prices, tap/swipe navigation, and voice commands ("Bitcoin price", "alert BTC above 62000"). No G2 hardware was available, so the video shows the exact 576×288 green canvas the glasses would display, not footage of the lenses.
+![Binance Session demo — live prices on the G2 lens](demo-screenshot.jpg)
+
+**[▶ Watch the demo on YouTube (1:56, narrated)](https://www.youtube.com/watch?v=iOMPiaktSMo)** — or [download the MP4](https://github.com/HeyRdzy/binance-session-g2/releases/download/v0.1.0/binance-session-demo.mp4). Recorded from the browser lens simulation: all five screens with live Binance prices, tap/swipe navigation, and voice commands ("Bitcoin price", "alert BTC above 62000" — refused as a duplicate, "alert ETH above 2000" — set). No G2 hardware was available, so the video shows the exact 576×288 green canvas the glasses would display, not footage of the lenses.
 
 ## What it does
 
